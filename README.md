@@ -2,8 +2,8 @@
 
 This is a simple Spring Boot application.
 
-**Features:**
-
+**Features:** 
+ 
 **Getting Started:**
 
 1. **Clone the repository:**
@@ -13,7 +13,7 @@ Build the project:
 
 Bash
 
-mvn clean install
+mvn clean install 
 Run the application:
 
 Bash
@@ -29,8 +29,8 @@ Create a new branch for your feature.
 Make your changes and commit them.
 Push your changes to your fork. 
 5. Create a pull request.   
-License:
-
+License: 
+ 
 This project is licensed under the [License Name] - see the [LICENSE] file for details.
 
 Contact:
