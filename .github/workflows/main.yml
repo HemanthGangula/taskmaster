@@ -36,7 +36,7 @@ jobs:
           docker push "${IMAGE_NAME}"
 
 
-       - name: Deploy to ECS
+      - name: Deploy to ECS
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           CLUSTER_NAME: ${{ secrets.ECS_CLUSTER_NAME }}
