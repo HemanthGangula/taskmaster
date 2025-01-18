@@ -11,6 +11,7 @@ public class HomeController {
                "<body>" +
                "<h1 style='text-align:center;'>Welcome to Taskmaster!</h1>" +
                "<p style='text-align:center;'> Spring Boot Demonstration  </p>" +
+               "<p style='text-align:center;'> By Hemanth Gangula  </p>" +
                "</body>" +
                "</html>";
     }
