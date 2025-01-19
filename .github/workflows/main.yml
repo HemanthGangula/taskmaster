@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to ECR
+name: Build, Push and Deploy to ECS
 
 on:
   push:
@@ -7,7 +7,10 @@ on:
 
 jobs:
   build-and-push:
+    name: Build and Push
     runs-on: ubuntu-22.04
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,28 +27,33 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push Docker image
+        id: build-image
         env:
-          ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
         run: |
-          # Remove any newlines from the repo name
-          ECR_REPO_NAME_CLEAN=$(echo -n "$ECR_REPO_NAME" | tr -d '\r\n')
-          IMAGE_NAME="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME_CLEAN}:latest"
           docker build -t "${IMAGE_NAME}" .
           docker push "${IMAGE_NAME}"
 
+            # deploy-to-ecs:
+            #   name: Deploy to ECS
+            #   needs: build-and-push
+            #   runs-on: ubuntu-22.04
+            #   steps:
+            #     - name: Configure AWS credentials
+            #       uses: aws-actions/configure-aws-credentials@v1
+            #       with:
+            #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            #         aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to ECS
-        env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          CLUSTER_NAME: ${{ secrets.ECS_CLUSTER_NAME }}
-          SERVICE_NAME: ${{ secrets.ECS_SERVICE_NAME }}
-          TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
-          CONTAINER_NAME: ${{ secrets.ECS_CONTAINER_NAME }}
-          IMAGE_NAME: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO_NAME_CLEAN}:latest"
-        run: |
-          # Update the ECS service with the new image
-          aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment
-
+            #     - name: Deploy to ECS
+            #       env:
+            #         AWS_REGION: ${{ secrets.AWS_REGION }}
+            #         CLUSTER_NAME: ${{ secrets.ECS_CLUSTER_NAME }}
+            #         SERVICE_NAME: ${{ secrets.ECS_SERVICE_NAME }}
+            #         TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
+            #         CONTAINER_NAME: ${{ secrets.ECS_CONTAINER_NAME }}
+            #         IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+            #       run: |
+            #         aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment
 
