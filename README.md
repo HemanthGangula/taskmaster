@@ -2,6 +2,8 @@
 
 This repository provides a way to automatically set up and deploy a Spring Boot application using AWS ECS, Docker, ECR, and GitHub Actions. It follows DevOps best practices to ensure the deployment is efficient, scalable, and secure.
 
+![Final Output](https://github.com/HemanthGangula/taskmaster/blob/feature1/images/final%20output.png)
+
 ## Note
 For detailed documentation regarding this project, please check your email. The documentation has been sent from hemantgangula7@gmail.com.
 
